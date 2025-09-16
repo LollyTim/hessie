@@ -1,7 +1,28 @@
+"use client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useState } from "react"
 
 export default function HomePage() {
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  async function handleSubmit() {
+    if (!email) return;
+    try {
+      setSubmitting(true);
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      setSubmitting(false);
+      if (!res.ok) return;
+      setEmail("");
+      alert("Thanks! We'll be in touch.");
+    } catch {
+      setSubmitting(false);
+    }
+  }
   return (
     <div className="min-h-screen flex flex-col bg-[rgba(239,244,255,1)]">
       {/* Navigation */}
@@ -71,10 +92,12 @@ export default function HomePage() {
               <div className="flex items-center">
                 <Input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="my-email@mail.com"
                   className="flex-1 h-12 px-4 text-base border-0 bg-transparent focus:ring-0 focus:outline-none shadow-none"
                 />
-                <Button className="h-11 px-6 text-white font-medium text-base bg-gradient-to-b from-[rgba(39,100,231,1)] to-[rgba(39,100,231,1)] shadow-[0_8px_24px_rgba(39,100,231,0.12)] hover:opacity-90 rounded-xl">
+                <Button onClick={handleSubmit} disabled={submitting} className="h-11 px-6 text-white font-medium text-base bg-gradient-to-b from-[rgba(39,100,231,1)] to-[rgba(39,100,231,1)] shadow-[0_8px_24px_rgba(39,100,231,0.12)] hover:opacity-90 rounded-xl">
                   Get access
                 </Button>
               </div>
@@ -85,11 +108,13 @@ export default function HomePage() {
               <div className="bg-white rounded-2xl p-3 shadow-sm border border-gray-200">
                 <Input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="my-email@mail.com"
                   className="w-full h-12 px-4 text-base border-0 bg-transparent focus:ring-0 focus:outline-none shadow-none"
                 />
               </div>
-              <Button className="w-full h-12 text-white font-medium text-base bg-gradient-to-b from-[rgba(39,100,231,1)] to-[rgba(39,100,231,1)] shadow-[0_8px_24px_rgba(39,100,231,0.12)] hover:opacity-90 rounded-2xl">
+              <Button onClick={handleSubmit} disabled={submitting} className="w-full h-12 text-white font-medium text-base bg-gradient-to-b from-[rgba(39,100,231,1)] to-[rgba(39,100,231,1)] shadow-[0_8px_24px_rgba(39,100,231,0.12)] hover:opacity-90 rounded-2xl">
                 Get access
               </Button>
             </div>
