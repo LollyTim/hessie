@@ -101,27 +101,27 @@ export default function HomePage() {
           {/* Integration Icons */}
           <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 lg:gap-8 max-w-sm md:max-w-none mx-auto">
             {/* Calendar Icon */}
-            <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
+            <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center">
               <img src={"/Group 5.png"} alt="Slack" className="w-full h-full" />
             </div>
 
             {/* Gmail Icon */}
-            <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
+            <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center">
               <img src={"/Group 3.png"} alt="Slack" className="w-full h-full" />
             </div>
 
             {/* Slack Icon */}
-            <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
+            <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center">
               <img src={"/Group 8.png"} alt="Slack" className="w-full h-full" />
             </div>
 
             {/* Outlook Icon */}
-            <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
+            <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center">
               <img src={"/Group 4.png"} alt="Slack" className="w-full h-full" />
             </div>
 
             {/* Notification Icon with Red Bubble */}
-            <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center relative">
+            <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center relative">
               <img src={"/Group 6.png"} alt="Slack" className="w-full h-full" />
               {/* Red notification bubble */}
             </div>
