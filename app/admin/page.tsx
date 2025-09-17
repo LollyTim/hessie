@@ -1,18 +1,8 @@
-import { promises as fs } from "fs";
-import path from "path";
+import { ConvexHttpClient } from "convex/browser";
+import { api } from "@/convex/_generated/api";
 
-async function readEmails(): Promise<string[]> {
-    const filePath = path.join(process.cwd(), "data", "emails.json");
-    try {
-        const raw = await fs.readFile(filePath, "utf8");
-        return JSON.parse(raw);
-    } catch {
-        return [];
-    }
-}
-
-export default async function AdminPage({ searchParams }: { searchParams: { key?: string } }) {
-    const key = searchParams?.key ?? "";
+export default async function AdminPage({ searchParams }: { searchParams: Promise<{ key?: string }> }) {
+    const { key = "" } = await searchParams;
     if (key !== (process.env.ADMIN_KEY ?? "dev")) {
         return (
             <div className="p-8">
@@ -20,7 +10,9 @@ export default async function AdminPage({ searchParams }: { searchParams: { key?
             </div>
         );
     }
-    const emails = await readEmails();
+    const url = process.env.NEXT_PUBLIC_CONVEX_URL as string;
+    const client = new ConvexHttpClient(url);
+    const emails = await client.query(api.emails.list, {});
     return (
         <div className="max-w-2xl mx-auto p-8">
             <h1 className="text-2xl font-semibold mb-4">Waitlist Emails ({emails.length})</h1>
@@ -29,9 +21,15 @@ export default async function AdminPage({ searchParams }: { searchParams: { key?
                     <p className="p-4 text-sm text-gray-600">No emails yet.</p>
                 ) : (
                     <ul className="divide-y">
-                        {emails.map((e) => (
-                            <li key={e} className="p-3 text-sm">{e}</li>
-                        ))}
+                        {emails.map((e: any) => {
+                            const ts = new Date(e.createdAt).toLocaleString();
+                            return (
+                                <li key={e.id} className="p-3 text-sm flex items-center justify-between">
+                                    <span className="font-mono text-gray-900">{e.email}</span>
+                                    <span className="text-gray-500">{ts}</span>
+                                </li>
+                            );
+                        })}
                     </ul>
                 )}
             </div>

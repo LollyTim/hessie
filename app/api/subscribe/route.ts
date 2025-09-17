@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
-import { promises as fs } from "fs";
-import path from "path";
+import { api } from "@/convex/_generated/api";
+import { internal } from "@/convex/_generated/api";
+import { ConvexHttpClient } from "convex/browser";
 
 interface SubscribeBody {
   email?: string;
@@ -12,17 +13,11 @@ function isValidEmail(email: string): boolean {
   return re.test(email);
 }
 
-async function appendEmail(email: string): Promise<void> {
-  const dataDir = path.join(process.cwd(), "data");
-  const filePath = path.join(dataDir, "emails.json");
-  await fs.mkdir(dataDir, { recursive: true });
-  let list: string[] = [];
-  try {
-    const raw = await fs.readFile(filePath, "utf8");
-    list = JSON.parse(raw);
-  } catch {}
-  if (!list.includes(email)) list.push(email);
-  await fs.writeFile(filePath, JSON.stringify(list, null, 2), "utf8");
+async function saveEmailConvex(email: string): Promise<void> {
+  const url = process.env.NEXT_PUBLIC_CONVEX_URL;
+  if (!url) throw new Error("Convex URL missing");
+  const client = new ConvexHttpClient(url);
+  await client.mutation(api.emails.add, { email });
 }
 
 async function notify(email: string): Promise<void> {
@@ -57,7 +52,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
     }
 
-    await appendEmail(email);
+    await saveEmailConvex(email);
     await notify(email);
 
     return NextResponse.json({ ok: true });

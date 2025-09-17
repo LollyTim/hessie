@@ -1,4 +1,4 @@
-import { query, mutation } from "convex/server";
+import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
 export const list = query({
@@ -9,7 +9,11 @@ export const list = query({
       .withIndex("by_createdAt")
       .order("desc")
       .collect();
-    return rows.map((r) => ({ id: r._id, email: r.email, createdAt: r.createdAt }));
+    return rows.map((r) => ({
+      id: r._id,
+      email: r.email,
+      createdAt: r.createdAt,
+    }));
   },
 });
 
