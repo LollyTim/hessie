@@ -21,7 +21,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                     <p className="p-4 text-sm text-gray-600">No emails yet.</p>
                 ) : (
                     <ul className="divide-y">
-                        {emails.map((e: any) => {
+                        {emails.map((e: { id: string; email: string; createdAt: number }) => {
                             const ts = new Date(e.createdAt).toLocaleString();
                             return (
                                 <li key={e.id} className="p-3 text-sm flex items-center justify-between">

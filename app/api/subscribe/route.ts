@@ -25,8 +25,9 @@ async function notify(email: string): Promise<void> {
   const toAddress = process.env.ALERT_EMAIL ?? "popsabey.ux@gmail.com";
   if (!resendKey) return;
   const resend = new Resend(resendKey);
+  const fromAddress = process.env.RESEND_FROM || "onboarding@resend.dev";
   await resend.emails.send({
-    from: "SmartA <no-reply@smart-a.ai>",
+    from: fromAddress,
     to: toAddress,
     subject: "New waitlist signup",
     text: `New email: ${email}`,
